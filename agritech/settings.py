@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 import dj_database_url
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s+p)_t#f6h3em-$29#q**+90i4-((-%d!c7k+!77u9mf5l872&'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG" , FALSE).lower ==  "true"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -81,7 +82,8 @@ DATABASES = {
     }
 }
 
-DATABASES["default"]= dj_database_url.parse("postgresql://agridb_user:O5F1orx2KmPzB0tuGUsQjM4pMt7MiJ3V@dpg-ctbtlnggph6c73a7qji0-a.oregon-postgres.render.com/agridb")
+database_url = os.environ.get("DATABASE_URL")
+DATABASES["default"]= dj_database_url.parse(database_url)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
