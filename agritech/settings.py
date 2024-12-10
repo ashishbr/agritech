@@ -22,17 +22,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# #PRODUCTION
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG" , "FALSE").lower ==  "true"
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+###################################################
+# local.env
+# SECRET_KEY = 'django-insecure-s+p)_t#f6h3em-$29#q**+90i4-((-%d!c7k+!77u9mf5l872&'
 
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
+
+# ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'data_extraction.apps.DataExtractionConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,9 +90,13 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+#PRODUCTION
 database_url = os.environ.get("DATABASE_URL")
 DATABASES["default"]= dj_database_url.parse(database_url)
+
+
+#LOCAL
+# DATABASES["default"]= dj_database_url.parse("postgresql://agridb_user:O5F1orx2KmPzB0tuGUsQjM4pMt7MiJ3V@dpg-ctbtlnggph6c73a7qji0-a.oregon-postgres.render.com/agridb")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
