@@ -40,6 +40,7 @@ ALLOWED_HOSTS = ["*"]
 # ALLOWED_HOSTS = ["*"]
 # Application definition
 
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(BASE_DIR, "agritech-444407-7e10ef5235c6.json")
 INSTALLED_APPS = [
     'data_extraction.apps.DataExtractionConfig',
     'django.contrib.admin',
@@ -133,7 +134,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
