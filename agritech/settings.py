@@ -30,6 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
 ###################################################
 # local.env
 # SECRET_KEY = 'django-insecure-s+p)_t#f6h3em-$29#q**+90i4-((-%d!c7k+!77u9mf5l872&'
@@ -38,9 +39,10 @@ ALLOWED_HOSTS = ["*"]
 # DEBUG = True
 
 # ALLOWED_HOSTS = ["*"]
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(BASE_DIR, "agritech-444407-7e10ef5235c6.json")
+
 # Application definition
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(BASE_DIR, "agritech-444407-7e10ef5235c6.json")
 INSTALLED_APPS = [
     'data_extraction.apps.DataExtractionConfig',
     'django.contrib.admin',
