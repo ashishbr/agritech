@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import dj_database_url
 import os
+import json
 from pathlib import Path
+from google.cloud import secretmanager
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,12 +41,15 @@ GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"
 # DEBUG = True
 
 # ALLOWED_HOSTS = ["*"]
+
+
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(BASE_DIR, "agritech-444407-7e10ef5235c6.json")
 
 # Application definition
 
 INSTALLED_APPS = [
     'data_extraction.apps.DataExtractionConfig',
+    'map_visualization.apps.MapVisualizationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -94,8 +99,8 @@ DATABASES = {
     }
 }
 #PRODUCTION
-database_url = os.environ.get("DATABASE_URL")
-DATABASES["default"]= dj_database_url.parse(database_url)
+# database_url = os.environ.get("DATABASE_URL")
+# DATABASES["default"]= dj_database_url.parse(database_url)
 
 
 #LOCAL
