@@ -4,6 +4,7 @@ from .forms import ImageUploadForm
 from google.cloud import vision
 from google.cloud.vision_v1 import types
 from PIL import Image
+from .utils import get_google_credentials_from_secret
 
 
 def index(request):
@@ -14,6 +15,12 @@ def upload_image(request):
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             image_instance = form.save()  # Save the image to the database
+            
+            # Set GOOGLE_APPLICATION_CREDENTIALS 
+            secret_id = "newgooglevisionsecretkey"  # secret name
+            project_id = "595045753872"  # project ID
+            credentials_path = get_google_credentials_from_secret(secret_id, project_id)
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
             
             # Perform OCR using Google Cloud Vision
             client = vision.ImageAnnotatorClient()
