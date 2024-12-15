@@ -1,29 +1,48 @@
 from django.shortcuts import render
-from data_extraction.models import GeotaggedImage
 from django.http import JsonResponse
-import re
+from data_extraction.models import GeotaggedImage
+import re  # To use regex for extraction
 
-# Function to extract latitude and longitude from extracted_text
-def parse_coordinates(text):
-    # Regex pattern to extract latitude and longitude
-    pattern = r"([-+]?\d{1,2}\.\d+),\s*([-+]?\d{1,3}\.\d+)"
-    match = re.search(pattern, text)
-    if match:
-        latitude = float(match.group(1))
-        longitude = float(match.group(2))
-        return latitude, longitude
-    return None, None
-
-# View to get geotagged data dynamically
 def get_geotagged_data(request):
-    data = []
-    for record in GeotaggedImage.objects.all():
-        latitude, longitude = parse_coordinates(record.extracted_text or "")
-        if latitude is not None and longitude is not None:
-            data.append({
-                'latitude': latitude,
-                'longitude': longitude,
-                'farmer_name': record.farmer_name,  # Ensure this field exists or adapt as needed
-                'note': record.note,               # Ensure this field exists or adapt as needed
-            })
-    return JsonResponse(data, safe=False)
+    """
+    Extract latitude, longitude, farmer name, and notes from extracted_text field
+    and return as JSON.
+    """
+    # Regular expressions for extracting relevant data
+    lat_pattern = r"Latitude:\s*([+-]?\d*\.\d+)"          # Match latitude
+    lng_pattern = r"Longitude:\s*([+-]?\d*\.\d+)"        # Match longitude
+    farmer_name_pattern = r"Farmer Name:\s*([\w\s]+)"    # Match farmer name
+    note_pattern = r"Note:\s*(.*)"                       # Match note after 'Note:'
+
+    parsed_data = []
+
+    # Fetch all records with extracted_text
+    geotagged_images = GeotaggedImage.objects.exclude(extracted_text__isnull=True)
+
+    for image in geotagged_images:
+        text = image.extracted_text
+        if text:
+            # Extract latitude and longitude
+            lat_match = re.search(lat_pattern, text)
+            lng_match = re.search(lng_pattern, text)
+
+            if lat_match and lng_match:
+                latitude = float(lat_match.group(1))
+                longitude = float(lng_match.group(1))
+
+                # Extract farmer name and note
+                farmer_name_match = re.search(farmer_name_pattern, text)
+                note_match = re.search(note_pattern, text)
+
+                farmer_name = farmer_name_match.group(1).strip() if farmer_name_match else "Unknown"
+                note = note_match.group(1).strip() if note_match else "No note available"
+
+                # Append extracted data to the response list
+                parsed_data.append({
+                    "latitude": latitude,
+                    "longitude": longitude,
+                    "farmer_name": farmer_name,
+                    "note": note,
+                })
+
+    return JsonResponse(parsed_data, safe=False)
